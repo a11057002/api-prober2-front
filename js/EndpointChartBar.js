@@ -30,7 +30,9 @@ endpointLevelLoadingIcon.setAttribute("style", "height:450px; position:relative;
 endpointDiv.setAttribute("style", "display:none");
 
 function drawEndpointGraph(data) {
-    endpointTotal.appendChild(document.createTextNode("Total number of endpoints : "+data.totalOperation.toLocaleString()));
+
+    // endpointTotal.appendChild(document.createTextNode("Total number of endpoints : "+data.totalOperation.toLocaleString()));
+    endpointTotal.innerText = "Total number of endpoints : " + data.totalOperation.toLocaleString()
     parseEndpointLevelData(data.endpointLevel);
 
     endpointLevelLoadingIcon.setAttribute("style", "display:none");
@@ -52,7 +54,7 @@ function parseEndpointLevelData(data) {
     var canvas = document.getElementById("endpointLevel"),
         context = canvas.getContext("2d");
 
-    context.clearRect(0,0,canvas.width,canvas.height);
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
     var margin = { top: 20, right: 20, bottom: 30, left: 40 },
         width = canvas.width - margin.left - margin.right,

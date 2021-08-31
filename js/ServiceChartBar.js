@@ -30,7 +30,9 @@ serviceLevelLoadingIcon.setAttribute("style", "height:450px; position:relative; 
 serviceDiv.setAttribute("style", "display:none");
 
 function drawServiceGraph(data) {
-    serviceTotal.appendChild(document.createTextNode("Total number of services : "+data.totalService.toLocaleString()));
+
+    // serviceTotal.appendChild(document.createTextNode("Total number of services : "+data.totalService.toLocaleString()));
+    serviceTotal.innerText = "Total number of services : " + data.totalService.toLocaleString()
     parseServiceLevelData(data.serviceLevel);
 
     serviceLevelLoadingIcon.setAttribute("style", "display:none");
@@ -52,12 +54,12 @@ function parseServiceLevelData(data) {
     var canvas = document.getElementById("serviceLevel"),
         context = canvas.getContext("2d");
 
-    context.clearRect(0,0,canvas.width,canvas.height);
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
     var margin = { top: 20, right: 20, bottom: 30, left: 40 },
         width = canvas.width - margin.left - margin.right,
         height = canvas.height - margin.top - margin.bottom;
-    
+
     var x = d3.scaleBand()
         .rangeRound([0, width])
         .padding(0.1);
@@ -123,7 +125,7 @@ function parseServiceLevelData(data) {
     data.forEach(function (d) {
         context.fillRect(x(d.feature), y(d.quantity), x.bandwidth(), height - y(d.quantity));
     });
-    
+
     // set context back to original point
     context.translate(-margin.left, -margin.top);
 }
