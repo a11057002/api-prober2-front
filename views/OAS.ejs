@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/oaspage-style.css">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+        integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <!-- <script src="https://cdn.rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script> -->
+    <!-- <script src="js/ClusterGraph.js"></script> -->
+    <script defer src="/js/OASBootBasicInformation.js"></script>
+
+    <!--<script defer src="/js/ServiceRecommand.js"></script>-->
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script defer src="/js/CircleClusterGraph.js"></script>
+    <!-- JSON Editor -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.2.0/jsoneditor.min.css" rel="stylesheet"
+        type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.2.0/jsoneditor.min.js"></script>
+
+    <style>
+        .securityAnnotationContent {
+            margin: 30px;
+            float: left;
+            display: none;
+        }
+    </style>
+</head>
+
+<body onload="requestClusterData(0.2)" style="background-color:#EFEFEF;">
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Method Detail</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="modalbody" class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Log In -->
+    <div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header text-center">
+          <h4 class="modal-title w-100 font-weight-bold">Sign in</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body mx-3">
+          <div class="md-form mb-5">
+            <i class="fas fa-user prefix grey-text"></i>
+            <label data-error="wrong" data-success="right" for="defaultForm-name">Username</label>
+            <input type="text" id="defaultForm-name" class="form-control validate">
+           
+          </div>
+  
+          <div class="md-form mb-4">
+            <i class="fas fa-lock prefix grey-text"></i>
+            <label data-error="wrong" data-success="right" for="defaultForm-pass">Password</label>
+            <input type="password" id="defaultForm-pass" class="form-control validate">
+            
+          </div>
+  
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+          <button class="btn btn-default" id="login">Log in</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+ 
+    <!--  Sign Up -->
+    <div class="modal fade" id="modalRegisterForm" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">Sign up</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <div class="md-form mb-5">
+                    <i class="fas fa-user prefix grey-text"></i>
+                    <label data-error="wrong" data-success="right" for="orangeForm-name">Username</label>
+                    <input type="text" id="orangeForm-name" class="form-control validate">
+                    
+                </div>
+                <div class="md-form mb-5">
+                    <i class="fas fa-envelope prefix grey-text"></i>
+                    <label data-error="wrong" data-success="right" for="orangeForm-email">Email</label>
+                    <input type="email" id="orangeForm-email" class="form-control validate">
+                    
+                </div>
+
+                <div class="md-form mb-4">
+                    <i class="fas fa-lock prefix grey-text"></i>
+                    <label data-error="wrong" data-success="right" for="orangeForm-pass">Password</label>
+                    <input type="password" id="orangeForm-pass" class="form-control validate">
+                    
+                </div>
+
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button class="btn btn-deep-orange" id="signUp">Sign up</button>
+            </div>
+        </div>
+    </div>
+</div>
+    <nav class="navbar  navbar-expand-lg navbar-dark bg-secondary text-white  fixed-top">
+        <a class="navbar-brand" href="/HomePageBoot">API Prober 2</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+
+                <li class="nav-item">
+                    <!--<a class="nav-link" id="loginbtn" target="_blank" >Login/Signup</a>-->
+                    
+                        <a href="" id="signUpbtn" class=" nav-link " data-toggle="modal"
+                            data-target="#modalRegisterForm">Sign Up</a>  
+                </li>
+                <li class="nav-item">
+                     <a href="" id="logInbtn"class="nav-link" data-toggle="modal" data-target="#modalLoginForm">
+                          Log In </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Favorites
+                    </a>
+                    <div id="dropdown-menu" class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                    </div>
+                </li>
+
+
+            </ul>
+
+        </div>
+        
+        <script>
+            function start() {
+                if (localStorage.getItem("bookmark") != null) {
+                    var dropdownMenu = document.getElementById("dropdown-menu");
+                    var list = JSON.parse(localStorage.getItem("bookmark"));
+
+                    list.forEach(
+                        function (element) {
+
+                            dropdownMenu.innerHTML += "<a class='dropdown-item' href='http://140.121.197.131:8000/" + element + "/OAS'>OAS-" + element + "</a>";
+                        });
+                }
+            }
+
+
+            document.addEventListener("load", start(), false);
+        </script>
+    </nav>
+    <section class="px-3 py-3" style="margin-top: 75px;">
+        <div id="OASPageLoading" class="col-md-12 text-center">
+            <i class="fa fa-cog fa-spin fa-5x fa-fw margin-bottom"></i>
+            <span class="sr-only">Loading...</span>
+        </div>
+
+        <div id="OASPage" class="row pb-3" style="visibility:hidden">
+            <div id="navbar" class="col-md-2">
+                <h4>Introduction</h4>
+                <ul class="timeline">
+                    <li>
+                        <a href="#service">Service</a>
+                        <p>Service ID, Service Title,and Service Feature</p>
+                    </li>
+                    <li>
+                        <a href="#serviceBasicInformation">Service Basic Information</a>
+                        <p>About service information detail</p>
+                    </li>
+                    <li>
+                        <a href="#clusterGraph">Cluster Graph</a>
+                        <p>Display the cluster where OAS is currently located and adjacent cluster</p>
+                    </li>
+                    <li>
+                        <a href="#servicePath">Service Path</a>
+                        <p>Service path and operation including its parameter details and java sample code</p>
+                    </li>
+                    <!--<li>
+                        <a href="#serviceSimilarity">Service Similarity</a>
+                        <p>Looking for alternative services in a cluster</p>
+                    </li>
+                    <li>
+                        <a href="#serviceMashup">Service Mashup</a>
+                        <p>Looking for extension services in a cluster</p>
+                    </li>-->
+                </ul>
+            </div>
+
+            <div id="service" class="col-md-10">
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 style="float: left;">Service</h4>
+                                <button id="admin" style="float: right;" class="btn">Admin</button>
+                            </div>
+
+                            <div class="card-body">
+                                <a href="#"><i class="fa fa-star" id="bookmark" onclick="bookmarkOAS()"
+                                        style="float:right;"></i></a>
+                                <h1 style="float:left;margin-right:10px;"># </h1>
+                                <h1 id="OASId" class="OASName">
+                                    <%= name %>
+                                </h1>
+
+                                <h1 id="OASName" class="OASName">OAS Name</h1>
+                                <div id="OASTag" class="OASTag"></div>
+                                <form>
+                                    <label class="checkbox-inline">
+                                        <div class="custom-control custom-checkbox mt-2">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck1"
+                                                value="REST-style URls" onclick="refreshOASBasicDataWithUserFilter()">
+                                            <label class="custom-control-label" for="customCheck1">REST-style
+                                                URIs</label>
+                                        </div>
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <div class="custom-control custom-checkbox mt-2">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck2"
+                                                value="HTTP status code use"
+                                                onclick="refreshOASBasicDataWithUserFilter()">
+                                            <label class="custom-control-label" for="customCheck2">HTTP status
+                                                code
+                                                use</label>
+                                        </div>
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <div class="custom-control custom-checkbox mt-2">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck3"
+                                                value="Input format JSON" onclick="refreshOASBasicDataWithUserFilter()">
+                                            <label class="custom-control-label" for="customCheck3">Input format
+                                                JSON</label>
+                                        </div>
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <div class="custom-control custom-checkbox mt-2">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck4"
+                                                value="Output format JSON"
+                                                onclick="refreshOASBasicDataWithUserFilter()">
+                                            <label class="custom-control-label" for="customCheck4">Output
+                                                format
+                                                JSON</label>
+                                        </div>
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <div class="custom-control custom-checkbox mt-2">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck5"
+                                                value="Explain Error messages"
+                                                onclick="refreshOASBasicDataWithUserFilter()">
+                                            <label class="custom-control-label" for="customCheck5">Explain
+                                                Error
+                                                messages</label>
+                                        </div>
+                                    </label>
+                                    <br>
+                                    <label class="checkbox-inline">
+                                        <div class="custom-control custom-checkbox mt-2">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck6"
+                                                value="TestPass" onclick="refreshOASBasicDataWithUserFilter()">
+                                            <label class="custom-control-label" for="customCheck6">Test Pass</label>
+                                        </div>
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <div class="custom-control custom-checkbox mt-2">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck7"
+                                                value="Authentication" onclick="refreshOASBasicDataWithUserFilter()">
+                                            <label class="custom-control-label" for="customCheck7">Authentication and
+                                                Authorization</label>
+                                        </div>
+                                    </label>
+                                    <!--<label class="checkbox-inline">
+                                        <div class="custom-control custom-checkbox mt-2">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck7"
+                                                value="JWT"
+                                                onclick="refreshOASBasicDataWithUserFilter()">
+                                            <label class="custom-control-label" for="customCheck7">JWT</label>
+                                        </div>
+                                    </label>
+				    <label class="checkbox-inline">
+                                        <div class="custom-control custom-checkbox mt-2">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck8"
+                                                value="OAuth2"
+                                                onclick="refreshOASBasicDataWithUserFilter()">
+                                            <label class="custom-control-label" for="customCheck8">OAuth2</label>
+                                        </div>
+                                    </label>
+				    <label class="checkbox-inline">
+                                        <div class="custom-control custom-checkbox mt-2">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck9"
+                                                value="ApiKeys"
+                                                onclick="refreshOASBasicDataWithUserFilter()">
+                                            <label class="custom-control-label" for="customCheck9">ApiKeys</label>
+                                        </div>
+                                    </label>-->
+                                </form>
+                            </div>
+                            <div class="card-footer">
+                                <div id="OASTestTag"></div>
+                                <div id="OASTest"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row py-5">
+                    <div id="serviceBasicInformation" class="col">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Service Basic Information</h4>
+                                <button id="ProberOAS" style="float: right;" class="btn" > AP2 version OAS</button>
+                            </div>
+                            <div class="card-body">
+                                <div id="OASDescription" class="OASDescription">
+                                    <h3>Description</h3><br>
+                                    <p id="Description">No Description</p>
+                                </div>
+                                <div id="OASBaseUrl" class="OASBaseUrl">
+                                    <h3>BaseUrl</h3><br>
+                                    <p id="BaseUrl"></p>
+                                </div>
+                                <div id="OASOther" class="OASOther">
+                                    <h3>Provider</h3><br>
+                                    <p id="Provider">No Provider</p><br>
+
+                                    <h3>Original swagger url</h3><br>
+                                    <p id="swaggerUrl">No Contact</p><br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <!-- <div id="clusterGraph" class="py-1" style="width: 100%;
+                            height: 600px;
+                            border: 1px solid lightgray;
+                            font: 22pt arial;"></div> -->
+                        <div class="row">
+                            <div id="ClusterGraphLoading" class="col-md-12 text-center">
+                                <i class="fa fa-cog fa-spin fa-5x fa-fw margin-bottom"></i>
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <input id="range" type="range" min="0" max="100" value="20"
+                                onchange="clusterThresholdChange(this.value)">
+                            <p id="rangeValue"></p>
+                        </div>
+                        <div id="ClusterGraphBlock" class="row" style="visibility:hidden">
+                            <div id="clusterGraph" class="col-md-6 mx-auto">
+                                <svg id="clusterSvg"></svg>
+                            </div>
+                            <div id="clusterTree" class="col-md-6 mx-auto">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    var canvas = document.getElementById("clusterSvg");
+                    var x = document.getElementById("clusterGraph").offsetWidth;
+                    // var w = window.innerWidth / 2.4;
+                    canvas.setAttribute("width", x);
+                    canvas.setAttribute("height", x);
+
+                    var range = document.getElementById("range");
+                    var rangeValue = document.getElementById("rangeValue");
+                    rangeValue.innerHTML = range.value / 100;
+
+                    function clusterThresholdChange(threshold) {
+                        rangeValue.innerHTML = threshold / 100;
+                        // 清空繪圖
+                        canvas.innerHTML = "";
+                        // 重新繪圖
+                        requestClusterData(threshold / 100);
+                    }
+                </script>
+
+
+                <div class="row py-5">
+                    <div id="servicePath" class="col">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Path</h4>
+                            </div>
+                            <div id="EndpointCard" class="card-body"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="securityAnnotationContent">
+                    <form method="POST">
+                        <h4>Security Scheme Annotaion</h4>
+
+                        <!-- *TYPE -->
+                        <div class=" form-group">
+                            <label for="formControlSelect1">security scheme</label>
+                            <select class="form-control" id="formControlSelect1">
+                                <option value="null">Select security scheme</option>
+                                <option value="http">HTTP authentication schemes</option>
+                                <option value="apikey">API keys</option>
+                                <option value="oauth2">OAuth2</option>
+                            </select>
+                        </div>
+
+                        <!-- *DESCRIPTION 
+                    <div class="form-group" id="description">
+                        <label for="InputDescription">description</label>
+                        <input type="text" class="form-control" id="InputDescription">
+                    </div>
+                    -->
+
+                        <!-- apikey IN/NAME -->
+                        <div id="apikey" style="display: none;" class="schemes">
+                            <div class="form-group">
+                                <label for="apikeyIn">apiKey in</label>
+                                <input type="text" class="form-control" id="apikeyIn" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="apikeyName">apiKey name</label>
+                                <input type="text" class="form-control" id="apikeyName" required>
+                            </div>
+                        </div>
+
+                        <!-- http SCHEME/BEARERFORMAT -->
+                        <div id="http" style="display: none;" class="schemes">
+                            <div class="form-group">
+                                <input type="radio" id="httpAuth" value="basic" name="http" checked="true">
+                                <label for="httpScheme">Basic scheme</label>
+                                <br>
+                                <input type="radio" id="httpAuth" value="bearer" name="http">
+                                <label for="httpBearer">Bearer scheme (JWT)</label>
+
+                            </div>
+                        </div>
+
+                        <!-- oauth2 FLOWS-->
+                        <div id="oauth2" style="display: none;" class="schemes">
+                            <div class="form-group">
+                                <label for="formControlSelect2">OAuth2 Flows</label>
+                                <select class="form-control" id="formControlSelect2">
+                                    <option value="null">Select OAuth2 Flow</option>
+                                    <option value="IF">Implict Flow</option>
+                                    <option value="ACF">Authorization Code Flow</option>
+                                    <option value="ROPF">Resource Owner Password Flow</option>
+                                    <option value="CCF">Client Credentials Flow</option>
+
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <!-- implicit/authorizationCode REQUIRED-->
+                                <div id="authorizationUrl" style="display: block;">
+                                    <label for="InputAuthorizationUrl">authorizationUrl</label>
+                                    <input type="text"" class=" form-control" id="InputAuthorizationUrl"
+                                        placeholder="IF/ACF REQUIRED" required>
+                                </div>
+                                <!-- password/clientCredentials/authorizationCode REQUIRED-->
+                                <div id="tokenUrl">
+
+                                    <label for="InputTokenUrl">token Url</label>
+                                    <input type="text" class="form-control" id="InputTokenUrl"
+                                        placeholder="ACF/ROPF/CCF REQUIRED" required>
+                                </div>
+                            </div>
+                            <br>
+
+                        </div>
+
+
+                        <button type="button" class="btn btn-primary" onclick="getFormData()">Save Security
+                            Scheme</button>
+                    </form>
+                </div>
+                <!--<div class="row">
+                    <div id="serviceSimilarity" class="col">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Service Similarity</h4>
+                            </div>
+                            <div id="SimilarityLoading" class="col-md-12 text-center py-3">
+                                <i class="fa fa-cog fa-spin fa-5x fa-fw margin-bottom"></i>
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <div id="SimilarityBody" class="card-body" style="display: none">
+                                <h4>Not Found</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+
+                <!--<div class="row py-5">
+                    <div id="serviceMashup" class="col">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Service Mashup</h4>
+                                <label class="radio-inline"><input id="radio1" type="radio" name="optradio"
+                                        checked="checked" onclick="chooseCategory(this.value)"
+                                        value="Similar Input">Similar Input</label>
+                                <label class="radio-inline"><input id="radio2" type="radio" name="optradio"
+                                        onclick="chooseCategory(this.value)" value="Similar Output">Similar
+                                    Output</label>
+                                <!-- <label class="radio-inline"><input id="radio3" type="radio" name="optradio" onclick="chooseCategory(this.value)"
+                                        value="Input Match">Input Match</label>
+                                <label class="radio-inline"><input id="radio4" type="radio" name="optradio" onclick="chooseCategory(this.value)"
+                                        value="Output Match">Output Match</label> -->
+                <!-- </div>
+                            <div id="MashupLoading" class="col-md-12 text-center py-3">
+                                <i class="fa fa-cog fa-spin fa-5x fa-fw margin-bottom"></i>
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <div id="MashupBody" class="card-body" style="display: none">
+                                <h4>Not Found</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+            </div>
+        </div>
+    </section>
+
+    <script>
+        window.onscroll = function () { myFunction() };
+
+        // 避免 service 跑位
+        var service = document.getElementById("service");
+        var navbar = document.getElementById("navbar");
+        var sticky = navbar.offsetTop;
+
+        function myFunction() {
+            if (window.pageYOffset >= sticky) {
+                navbar.classList.add("sticky")
+                service.classList.add("offset-md-2");
+                // service.classList.remove("pb-3");
+                // service.classList.add("pb-5");
+            } else {
+                navbar.classList.remove("sticky");
+                service.classList.remove("offset-md-2");
+                // service.classList.remove("pb-5");
+                // service.classList.add("pb-3");
+            }
+        }
+    </script>
+</body>
+
+</html>

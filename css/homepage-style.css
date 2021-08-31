@@ -1,0 +1,20 @@
+.acik-renk-form{
+    background: rgba(255, 255, 255, 0.58);
+}
+.custab{
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin: 5% 0;
+    box-shadow: 3px 3px 2px #ccc;
+    transition: 0.5s;
+}
+.custab:hover{
+    box-shadow: 3px 3px 0px transparent;
+    transition: 0.5s;
+}
+.modal-lg {
+    max-width: 80%;
+}
+.checkbox-inline{
+    margin-left: 10px;
+}

@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+  
+    <title>API Prober2 - Obtain Token</title>
+    <style>
+        
+        .btn{
+            width: 200px;
+        }
+        .securityDataContent {
+            margin: 15px;
+            width: 30%;
+        }
+    </style>
+  </head>
+  <body>
+    
+    <div class="securityDataContent">        
+        
+        
+        <div id="oauth2" class = "securityData">
+            <label for="formControlSelect2">Select OAuth2 flow</label>
+            <select class="form-control oauthType" id="formControlSelect2">
+                <option value="null">OAuth2 Flow Type</option>
+                <option value="implicit">Implict Flow</option>
+                <option value="authorizationCode">Authorization Code Flow</option>
+                <option value="resourceOwnerPassword">Resource Owner Password Flow</option>
+                <option value="clientCredentials">Client Credentials Flow</option>
+            </select>
+
+            <div id="implicit" style="display: none;" class="flow">
+                <div class="form-group">
+                    <label for="clientId1">clientId</label>
+                    <input type="text" class="form-control" id="clientId1"  placeholder=""> 
+                </div>
+                <div class="form-group">
+                    <label for="requiredp1">other required parameters <br><p style="color:grey">(format: <br>&your_required_parameter=your_parameter_value&...)</p></label>                        
+                    <input type="text" class="form-control" id="requiredp1"  placeholder=""> 
+                </div>
+                <p style="color:grey">Redirect URL:<br> http://sose-idv.cse.ntou.edu.tw:8080/implicit </p> 
+
+            </div>
+            <div id="authorizationCode" style="display: none;" class="flow">
+                <div class="form-group">
+                    <label for="clientId2">clientId</label>
+                    <input type="text" class="form-control" id="clientId2"  placeholder="">
+                </div>
+                <div class="form-group">
+                    <label for="clientSecret2">clientSecret</label>
+                    <input type="password" class="form-control" id="clientSecret2"  placeholder="">
+                </div>
+                <div class="form-group">
+                    <label for="requiredp2">other required parameters <br><p style="color:grey">(format: <br>&your_required_parameter=your_parameter_value&...)</p></label>
+                    <input type="text" class="form-control" id="requiredp2"  placeholder=""> 
+                </div>
+                <p style="color:grey">Redirect URL: http://sose-idv.cse.ntou.edu.tw:8080/auth </p>
+            </div>
+            <div id="resourceOwnerPassword" style="display: none;" class="flow">
+                <div class="form-group">
+                    <label for="clientId3">clientId</label>
+                    <input type="text" class="form-control" id="clientId3"  placeholder="">
+                </div>
+                <div class="form-group">
+                    <label for="clientSecret3">clientSecret</label>
+                    <input type="password" class="form-control" id="clientSecret3"  placeholder=""> 
+                </div>
+                <div class="form-group">
+                    <label for="username3">username</label>
+                    <input type="text" class="form-control" id="username3"  placeholder=""> 
+                </div>
+                <div class="form-group">
+                    <label for="password3">password</label>
+                    <input type="password" class="form-control" id="password3"  placeholder=""> 
+                </div>
+                <div class="form-group">
+                    <label for="requiredp3">other required parameters <br><p style="color:grey">(format: <br>&your_required_parameter=your_parameter_value&...)</p></label>
+                    <input type="text" class="form-control" id="requiredp3"  placeholder=""> 
+                </div>
+            </div>
+            <div id="clientCredentials" style="display: none;" class="flow">
+                <div class="form-group">
+                    <label for="clientId4">clientId</label>
+                    <input type="text" class="form-control" id="clientId4"  placeholder="">
+                </div>
+                <div class="form-group">
+                    <label for="clientSecret4">clientSecret</label>
+                    <input type="password" class="form-control" id="clientSecret4"  placeholder="">
+                </div>
+                <div class="form-group">
+                    <label for="requiredp4">other required parameters <br><p style="color:grey">(format: <br>&your_required_parameter=your_parameter_value&...)</p></label>
+                    <input type="text" class="form-control" id="requiredp4"  placeholder="">
+                </div>
+            </div>
+        
+            <div id="authorizeBtn">
+                <br>
+                <button class="btn btn-info" onclick="auth()">Authorize</button>
+            </div>
+            <div>
+                <a id="authLink" href="" target="_blank"></a>
+                <p id="responseText"></p>
+            </div>
+            
+            <hr>
+            <div class="form-group">
+                <label for="token">Token</label>
+                <input type="text" class="form-control" id="token" >
+            </div>
+            
+        </div>
+
+
+        <br>
+       
+                
+    <script>
+        var ipUrl = "http://140.121.197.130:55213";
+        var formControlSelect2 = document.querySelector('#formControlSelect2');        
+        var flowElements = document.getElementsByClassName("flow");
+        
+        formControlSelect2.addEventListener('change', (event) => {
+            for(var i = 0; i < flowElements.length; i++){
+                flowElements[i].style.display = (flowElements[i].id == (event.target.value))?'block':'none';
+            }
+        });
+
+
+        function auth(){
+            var id = window.location.hash.substr(1);
+            var flow = formControlSelect2.value;
+            var data ="";
+            if(flow == "implicit"){
+                data = {
+                    "oasId": id,
+                    "flow": flow,
+                    "clientId":$("#clientId1").val(),                           
+                    "other":$("#requiredp1").val()
+                }
+            }
+            if(flow == "authorizationCode"){
+                data = {
+                    "oasId": id,
+                    "flow": flow,
+                    "clientId":$("#clientId2").val(),
+                    "clientSecret":$("#clientSecret2").val(),
+                    "other":$("#requiredp2").val()
+                }
+            }
+            if(flow == "resourceOwnerPassword"){
+                data = {
+                    "oasId": id,
+                    "flow": flow,
+                    "clientId": $("#clientId3").val(),
+                    "clientSecret": $("#clientSecret3").val(),
+                    "username": $("#username3").val(),
+                    "password": $("#password3").val(),
+                    "other":$("#requiredp3").val()
+                }
+            }
+            if(flow == "clientCredentials"){
+                data = {
+                    "oasId": id,
+                    "flow": "clientCredentials",
+                    "clientId":$("#clientId4").val(),
+                    "clientSecret":$("#clientSecret4").val(),
+                    "other":$("#requiredp4").val() 
+                }
+            }
+            data = JSON.stringify(data);
+            console.log(data);
+
+
+            var responseText = document.getElementById("responseText");
+            var link = document.getElementById("authLink");
+            responseText.textContent="";
+            link.textContent="";
+
+            //console.log(formData);
+            $.ajax({
+
+                url: ipUrl+"/authorize",
+                type: "POST",
+                crossDomain: true,                        
+                data: data,
+                contentType: "application/json; charset=utf-8",
+                dataType: "text",
+                
+                success: function(responseData){
+                        console.log(responseData);
+                        if(responseData.includes("http")){                    
+                            link.setAttribute("href",responseData);                        
+                            link.textContent = "Get my access token";
+                        }
+                        else{
+                            $("#token").val(responseData);
+                        }
+                },
+                fail:function(responseData){
+                    console.log("err")
+                }
+
+
+            });
+        }
+
+    </script>
+    </body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>All test case</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <style>
+    .content{
+        margin: 20px;
+    }
+    #resourceId{
+        width: 300px;
+    }
+    
+    </style>
+</head>
+<body>
+    <script>
+        var ipUrl = "http://140.121.197.131:8080";
+        var domainUrl = "http://anycourse.cs.ntou.edu.tw:8000";
+        function showTestCase(operationId){
+         $.ajax({
+            url: ipUrl+"/getTestCaseList/"+operationId,
+            type: "GET", 
+            dataType: "text",
+        
+        
+            success: function(response){
+                console.log(response) 
+                let testcases = JSON.parse(response);
+                let tbody = document.getElementById("tbody");
+                //console.log(tecases);
+                if(testcases == "") {
+                    tbody.innerHTML = "";
+                    console.log("no testcases");
+                } 
+                else{
+                    
+                    tbody.innerHTML = "";
+                    console.log(testcases);
+                    for(i in testcases){
+                        let row = document.createElement("tr");
+                        row.setAttribute("id","tr"+testcases[i].nodeId);
+                        let parameterRow = document.createElement("td");
+                        let jsonPathRow = document.createElement("td");
+                        let expectedRow = document.createElement("td");
+                        let actionRow = document.createElement("td");
+
+                        jsonPathRow.setAttribute("style","vertical-align: bottom; ");
+                        expectedRow.setAttribute("style","vertical-align: bottom; ");
+                        actionRow.setAttribute("style","vertical-align: bottom; ");
+                        
+                        let editBtn = document.createElement("button");
+                        editBtn.setAttribute("class", "btn btn-outline-secondary");
+                        editBtn.setAttribute("id","edit"+testcases[i].nodeId);
+                        editBtn.setAttribute("onclick","editTestCase("+testcases[i].nodeId+")");
+                        editBtn.innerText = "Edit";
+                        
+
+                        let saveBtn = document.createElement("button");
+                        saveBtn.setAttribute("class", "btn btn-outline-success");
+                        saveBtn.setAttribute("id","save"+testcases[i].nodeId);
+                        saveBtn.setAttribute("onclick","saveTestCase("+testcases[i].nodeId+")");
+                        saveBtn.innerText = "Save";
+
+                        let deleBtn = document.createElement("button");
+                        deleBtn.setAttribute("class", "btn btn-outline-danger");
+                        deleBtn.setAttribute("id","delete"+testcases[i].nodeId);
+                        deleBtn.setAttribute("onclick","deleteTestCase("+testcases[i].nodeId+")");
+                        deleBtn.innerText = "Delete";
+
+
+                        let jsonPath = document.createElement("input");
+                        let expected = document.createElement("input");
+                        jsonPath.setAttribute("name","jsonPath");
+                        jsonPath.setAttribute("id","jsonPath"+testcases[i].nodeId);
+                        jsonPath.setAttribute("class","form-control");
+                        jsonPath.value = testcases[i].jsonPath;
+                        //let jsonPathLabel = document.createElement("label");
+                        //jsonPathLabel.innerHTML = "JSONPath";
+                        expected.setAttribute("name","expectedPartialResult");
+                        expected.setAttribute("class","form-control");
+                        expected.setAttribute("id","expected"+testcases[i].nodeId);
+                        expected.value = testcases[i].expectedPartialResult;
+                        //let expectedLabel = document.createElement("label");
+                        //expectedLabel.innerHTML = "Expected partial results";
+                        
+                        for(j in testcases[i].parameters){
+                            let parameter = document.createElement("input");
+                            let parameterLabel = document.createElement("label");
+                            parameterLabel.innerHTML = testcases[i].parameters[j].name;
+                            parameter.setAttribute("name", testcases[i].parameters[j].name);
+                            parameter.setAttribute("class","form-control");
+                            parameter.setAttribute("placeholder",testcases[i].parameters[j].name);
+                            parameter.value = testcases[i].parameters[j].value;
+                            parameterRow.appendChild(parameterLabel);
+                            parameterRow.appendChild(parameter);
+                        }
+                        //expectedRow.appendChild(expectedLabel);
+                        expectedRow.appendChild(expected);
+                        //jsonPathRow.appendChild(jsonPathLabel);
+                        jsonPathRow.appendChild(jsonPath);
+                        //actionRow.appendChild(editBtn);
+                        actionRow.appendChild(saveBtn);
+                        //actionRow.appendChild(deleBtn);
+                        row.appendChild(parameterRow)
+                        row.appendChild(jsonPathRow);
+                        row.appendChild(expectedRow);
+                        row.appendChild(actionRow)
+                        tbody.appendChild(row);
+                        //testCases
+                    }
+                }
+            },
+            
+            fail: function(response){
+                
+            }
+            
+        });
+
+    }
+
+    function editTestCase(){
+    }
+    function saveTestCase(testCaseId){
+        console.log(document.getElementById("tr"+testCaseId));
+        let data = document.getElementById("tr"+testCaseId);
+        let jsonPath = document.getElementById("jsonPath"+testCaseId).value;
+        let expectedPartialResult = document.getElementById("expected"+testCaseId).value;
+        let parameters = [];
+        console.log(data.querySelectorAll('input')[1].value)
+        for(var i = 0; i < data.querySelectorAll('input').length-2; i++){
+            console.log(data.querySelectorAll('input')[i].name)
+            if(data.querySelectorAll('input')[i].name != "jsonPath" || data.querySelectorAll('input')[i].name != "expectedPartialResult"){
+                parameters.push({"name":data.querySelectorAll('input')[i].name,"value":data.querySelectorAll('input')[i].value});
+   
+               }            
+        }
+        
+        //var parameter = [{"in":"query","name":"v","value":"20200101"},{"in":"query","name":"oauth_token","value":"NGW50DGLAX1S0P2P3YCIQAXL33SLTU2GJ4BFOLQWGVOJQLTB"}];
+        var form = {
+            "testCaseId": parseInt(testCaseId),
+            "jsonPath": jsonPath,
+            "expectedPartialResult": expectedPartialResult,
+            "parameters": parameters
+        }
+        form = JSON.stringify(form)
+        console.log(form)
+        $.ajax({
+            url: ipUrl+"/editTestCase/",
+            type: "POST", 
+            contentType: "application/json",
+            data: form,
+            dataType: "text",
+
+            success:function(){
+
+            }
+        });
+
+    }
+    function linkToTestingCase(id){
+        let url = domainUrl+"/testing#"+id;
+        let iframe = document.createElement("iframe");
+        iframe.setAttribute("src", url);
+        iframe.setAttribute("class", "embed-responsive-item");
+        if(document.getElementById("testCase")) document.getElementById("testCase").innerHTML = "";
+        let testCase = document.getElementById("testCase");
+        testCase.append(iframe);
+        
+        //window.open("http://sose-idv.cse.ntou.edu.tw:8000/testing#"+id);
+    }
+    function deleteTestCase(id){
+        
+
+    }   
+
+    function showOperation(){
+        $.ajax({
+            url: ipUrl+"/getOperationList/"+ window.location.hash.substr(1),
+            type: "GET", 
+            contentType: "application/json",
+            
+            dataType: "text",
+
+            success:function(response){
+                let operationDiv = document.getElementById("operation");
+                
+                response = response.slice(1,response.length-1).split(",")
+                for(i in response){
+                    let operationAction = response[i].split("#")[0];
+                    let path = response[i].split("#")[1];
+                    let id = response[i].split("#")[2];
+                    
+                    let button = document.createElement("button");
+                    button.setAttribute("class","btn btn-outline-info");
+                    button.innerText = operationAction.toUpperCase() + " "+path;
+                    button.setAttribute("onclick","linkToTestingCase("+id+")");
+                    button.setAttribute("style","margin: 10px;");
+                    operationDiv.appendChild(button)
+
+                    let testCase =  document.createElement("div");
+                    testCase.setAttribute("id", "testCase");
+                    testCase.setAttribute("class", "embed-responsive embed-responsive-16by9");
+                    document.body.appendChild(testCase);
+
+                }
+                
+
+            }
+        });
+    }
+    showOperation();
+    </script>
+
+    <div class="content">
+        <h5>Choose the Operation to see the testing result list.</h5>
+        
+        <div class="form-group" id="operation"></div>
+    </div>
+        
+        
+<br><br>
+       
+        
+    </div>
+</body>
+</html>

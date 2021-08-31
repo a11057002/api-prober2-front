@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+  <title>Testing Result</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+    integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+    integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+    crossorigin="anonymous"></script>
+  <script>
+
+    /*let json = '[{"jsonPath":"$.response[*]","testingPass":["2021/05/01 14:00:59 pass","2021/05/01 15:00:59 fail"],"provider":"User","expectedPartialResult":"","parameters":[{"in":"query","name":"v","value":"20200101"},{"in":"query","name":"oauth_token","value":"NGW50DGLAX1S0P2P3YCIQAXL33SLTU2GJ4BFOLQWGVOJQLTB"}]},{"jsonPath":"$.response.venues[*]","testingPass":["2021/05/01 14:00:59 pass","2021/05/01 15:00:59 pass"],"provider":"User","expectedPartialResult":"","parameters":[{"in":"query","name":"v","value":"20200101"},{"in":"query","name":"oauth_token","value":"NGW50DGLAX1S0P2P3YCIQAXL33SLTU2GJ4BFOLQWGVOJQLTB"}]}]';
+    json = JSON.parse(json); 
+    console.log(json);
+    console.log(1);*/
+    var ipUrl = "http://140.121.197.131:8080";
+    $.ajax({
+      url: ipUrl+"/getAllTestCase/" + window.location.hash.substr(1),
+     // url: "http://140.121.197.137:8080/getAllTestCase/7106",
+      
+      type: "GET",
+      dataType: "text",
+
+
+      success: function (response) {
+        console.log(response)
+
+        let timeStamp1 = [];
+
+        let testingTitle = response.split("#")[0];
+        let testingDetail = JSON.parse(response.split("#")[1]);
+        testingTitle = testingTitle.slice(1, testingTitle.length - 1).slice().split(",")
+        for (item in testingTitle) {
+          timeStamp1.push(testingTitle[item].replace(/\s/, ''));
+        }
+        console.log(timeStamp1)
+
+        // Set testing result 
+        let resultBody = document.getElementById("resultBody");
+        for (var i = 0; i < timeStamp1.length; i++) {
+          let operationTime = timeStamp1[i].split("-");
+          let resultTimeRow = document.createElement("tr");
+          let resultTimeCol = document.createElement("td");
+          resultTimeCol.setAttribute("onclick","display(\""+timeStamp1[i]+"\","+JSON.stringify(testingDetail)+")");
+          
+          //resultTimeCol.setAttribute("id")
+          let resultPassCol = document.createElement("td");
+          let resultFailCol = document.createElement("td");
+
+          resultTimeCol.innerHTML = "<a href=#>"+operationTime[0] + ' ' + operationTime[1]+"</a>";
+          resultPassCol.innerText = operationTime[2].split("/")[0];
+          resultFailCol.innerText = operationTime[2].split("/")[1] - operationTime[2].split("/")[0];
+          console.log(operationTime[2].split("/")[0])
+          resultTimeRow.appendChild(resultTimeCol);
+          resultTimeRow.appendChild(resultPassCol);
+          resultTimeRow.appendChild(resultFailCol);
+          resultBody.appendChild(resultTimeRow);
+        }
+///*
+       
+      },
+      fail: function (response) {
+        console.log("error");
+      }
+    });
+
+
+    function display(date, testingDetail){
+      let table = document.getElementById("testingBody");
+       // console.log(testingDetail)
+        //table.innerHTML='<tr><th scope="row">Testing Time</th><th scope="row">Pass</th><th scope="row">Fail</th></tr>';
+        //let testingItem = ""
+        //for (var i = 0; i < timeStamp1.length; i++) {
+          let operationTime = date.split("-");
+          let testingTimeRow = document.getElementById("resultItem");
+          //let testingTimeCol = document.createElement("td");
+          let testingPassCol = document.createElement("td");
+          let testingFailCol = document.createElement("td");
+          
+          testingTimeRow.innerHTML = "";
+          var passNum = 1;
+          var failNum = 1;
+          for (content in testingDetail) {
+            let testingResultTimeStamp = testingDetail[content].testingResults;
+            let timeStamp2 = [];
+            if (testingDetail[content].testingResults != "null") {
+
+              testingResultTimeStamp = testingResultTimeStamp.slice(1, testingResultTimeStamp.length - 1).slice().split(",")
+              //console.log(operationTime[0]+operationTime[1] )
+              //console.log(testingResultTimeStamp);
+              for (item in testingResultTimeStamp) {
+                timeStamp2.push(testingResultTimeStamp[item].replace(/\s/, ''));
+              }
+              
+              //console.log(timeStamp2);
+              for (var j = 0; j < timeStamp2.length; j++) {
+                let testCaseTime = timeStamp2[j].split("-");
+                
+                if (testCaseTime[0] + testCaseTime[1] == operationTime[0] + operationTime[1]) {
+
+
+                  if (testCaseTime[2] == "pass") {
+                    let passItemCol = document.createElement("td");
+                    let passItemTable = document.createElement("table");
+                    table.setAttribute("class","table");
+                    console.log(testingDetail[content]);
+                    let parameters = "";
+                    for(var x=0; x < testingDetail[content].parameters.length; x++   ){
+                      parameters += "<li class='list-group-item'>- name: "+ testingDetail[content].parameters[x].name
+                                  +"</li><li class='list-group-item'>in: "+testingDetail[content].parameters[x].in
+                                  +"</li><li class='list-group-item'>value: "+testingDetail[content].parameters[x].value+"</li><br>";
+                    }
+
+                    testingPassCol.innerHTML += '<span class="badge badge-secondary">Test Case'+passNum+'</span><ul class="list-group">Expected partial result: <li class="list-group-item">' + JSON.stringify(testingDetail[content].expectedPartialResult) + '</li>JSONPath:<li class="list-group-item">'
+                                                +JSON.stringify(testingDetail[content].jsonPath)+'</li>Parameters:'
+                                                +parameters+'</ul><hr>';
+                    testingPassCol.setAttribute("style","text-align: left; word-wrap: break-word; max-width: 150px;");
+                    passNum++;
+                    //table.innerHTML += '<td>'+testingDetail[content]+'</td>';
+                    //console.log(operationTime[0] + operationTime[1])
+                    //console.log(testingDetail[content]);
+                  }
+                  if (testCaseTime[2] == "fail") {
+                    parameters = "";
+                    for(var x=0; x < testingDetail[content].parameters.length; x++   ){
+                      parameters += "<li class='list-group-item'>- name: "+ testingDetail[content].parameters[x].name
+                                  +"</li><li class='list-group-item'>in: "+testingDetail[content].parameters[x].in
+                                  +"</li><li class='list-group-item'>value: "+testingDetail[content].parameters[x].value+"</li><br>";
+                    }
+                    testingFailCol.innerHTML += '<span class="badge badge-secondary">Test Case'+failNum+'</span><ul class="list-group">Expected partial result: <li class="list-group-item">' + JSON.stringify(testingDetail[content].expectedPartialResult) + '</li>JSONPath:<li class="list-group-item">'
+                                                +JSON.stringify(testingDetail[content].jsonPath)+'</li>Parameters:'
+                                                +parameters+'</ul><hr>';
+                    //testingFailCol.innerHTML += '<td>' + JSON.stringify(testingDetail[content]) + '</td>';
+                    testingFailCol.setAttribute("style","text-align: left; word-wrap: break-word; max-width: 150px;");
+                    failNum++;
+                    //table.innerHTML += '<td>'+testingDetail[content]+'</td>';
+                  }
+                  
+                }
+              }
+
+            }
+
+            //testingTimeRow.appendChild(testingTimeCol);
+            testingTimeRow.appendChild(testingPassCol);
+            testingTimeRow.appendChild(testingFailCol);
+          }
+          table.appendChild(testingTimeRow);
+       // }
+    }
+    //window.location.hash.substr(1);
+  </script>
+  <style>
+  
+  </style>
+</head>
+
+<body>
+  <div>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+
+          <th scope="col">Testing Time</th>
+          <th scope="col"><span class="badge badge-success">Pass</span></th>
+          <th scope="col"><span class="badge badge-danger">Fail</span></th>
+        </tr>
+      </thead>
+      <tbody id="resultBody" >
+      </tbody>
+  </div>
+
+
+  <table id="testingTable" class="table ">
+    <tbody id="testingBody">
+      <tr>
+        
+        <th scope="row"><span class="badge badge-success">Pass</span></th>
+        <th scope="row"><span class="badge badge-danger">Fail</span></th>
+      </tr>
+      <tr id="resultItem"></tr>
+
+    </tbody>
+
+  </table>
+
+
+
+</body>
+
+</html>

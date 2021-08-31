@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/homepage-style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+        crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <!-- <script defer src="js/HomePage.js"></script> -->
+    <script defer src="js/SearchEngine.js"></script>
+    <script src="js/StoreTmp.js"></script>
+    <script defer src="js/PopularAndStandardRecomment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/store.js/1.3.20/store.js"></script>
+
+    <script src=https://d3js.org/d3.v4.min.js charset="utf-8"></script>
+</head>
+
+<body style="background-color:#EFEFEF;">
+    
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Search Result</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="modalbody" class="modal-body">
+                    <!-- <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3 text-center d-flex">
+                                    <img src="https://img.gaadicdn.com/images/car-images/165x68/Renault/Renault-KWID/4318/047.jpg"
+                                        alt="" class="mx-auto my-auto">
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="row">
+                                        <div class="col text-left">
+                                            <h4>Resource ID - Resource Name</h4>
+                                        </div>
+                                        <div class="col text-right">
+                                            <a class="btn btn-warning" href="/1234/OAS">See Service Detail</a>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <span class="badge badge-success mx-1">Feature 1</span>
+                                            <span class="badge badge-success mx-1">Feature 2</span>
+                                            <span class="badge badge-success mx-1">Feature 3</span>
+                                            <span class="badge badge-success mx-1">Feature 4</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col my-1 text-center d-flex">
+                                            <p class="mx-auto my-auto text-truncate">The World Wide Fund for Nature (WWF) is an
+                                                international organization
+                                                working on issues
+                                                regarding the conservation, research and restoration of the
+                                                environment,
+                                                formerly named
+                                                the World Wildlife Fund. WWF was founded in 1961.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- As a link -->
+    <nav class="navbar navbar-dark bg-secondary text-white fixed-top">
+        <a class="navbar-brand" href="#">API Prober 2</a>
+
+        <div>
+            <a class="nav-item nav-link text-white" href="#">Contact</a>
+        </div>
+    </nav>
+
+    <section class="search-banner py-3" id="search-banner">
+        <div class="container py-5 my-5">
+            <div class="row">
+                <div id="searchBoxLoadingId" class="col-md-12 text-center" style="display:none">
+                    <i class="fa fa-cog fa-spin fa-5x fa-fw margin-bottom"></i>
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <div id="searchBoxId" class="col-md-12">
+                    <div class="card acik-renk-form">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <div class="form-group ">
+                                        <input type="text" id="userQuery" class="form-control" placeholder="Search API ...">
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-info" onclick="postUserQuery()">Search</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <form>
+                                        <label class="checkbox-inline">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="customCheck1"
+                                                    value="HTTPS support">
+                                                <label class="custom-control-label" for="customCheck1">HTTPS support</label>
+                                            </div>
+                                        </label>
+                                        <!--<label class="checkbox-inline">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="customCheck2"
+                                                    value="User authentication">
+                                                <label class="custom-control-label" for="customCheck2">User
+                                                    authentication</label>
+                                            </div>
+                                        </label>-->
+                                        <label class="checkbox-inline">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="customCheck3"
+                                                    value="At most 20 operations">
+                                                <label class="custom-control-label" for="customCheck3">At most 20
+                                                    operations</label>
+                                            </div>
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="customCheck4"
+                                                    value="Example API conversations">
+                                                <label class="custom-control-label" for="customCheck4">Example</label>
+                                            </div>
+                                        </label>
+                                        
+                                        <label class="checkbox-inline">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="customCheck2"
+                                                    value="HTTP authentication schemes">
+                                                <label class="custom-control-label" for="customCheck2">HTTP authentication schemes</label>
+                                            </div>
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="customCheck5"
+                                                    value="OAuth2">
+                                                <label class="custom-control-label" for="customCheck5">OAuth2</label>
+                                            </div>
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="customCheck6"
+                                                    value="API keys">
+                                                <label class="custom-control-label" for="customCheck6">API keys</label>
+                                            </div>
+                                        </label>
+                                        
+                                        <select class="custom-select checkbox-inline" id="customCheck7" style="width: 200px;">
+                                            <option selected value="Testing">Testing</option>
+                                            <option value="80% Test Pass">100% Test Pass</option>
+                                            <option value="60% Test Pass">60% Test Pass</option>
+					    <option value="Test Fail">Test Fail</option>
+					    <option value="No Test">No Test</option>
+                                            
+                                        </select>
+                                        
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 px-5">
+        <div class="row">
+            <div class="col">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item"><a id="ServiceLevelTag" data-toggle="tab" href="#ServiceLevel" class="list-group-item list-group-item-action active">Service
+                            Level</a></li>
+                    <li class="nav-item"><a id="EndpointLevelTag" data-toggle="tab" href="#EndpointLevel" class="list-group-item list-group-item-action">Endpoint
+                            Level</a></li>
+                </ul>
+
+                <div class="tab-content py-3">
+                    <div id="ServiceLevel" class="tab-pane fade show active">
+                        <div class="row">
+                            <div class="col">
+                                <article>
+                                    <section>
+                                        <h3>HTTPS support</h3>
+                                        <p>Ensure that the user's personal data protects the privacy and integrity of
+                                            the exchanged data during data transmission.</p>
+                                        <h3>User authentication</h3>
+                                        <p>Protect the service interface from malicious use.</p>
+                                        <h3>At most 20 operations</h3>
+                                        <p>Service providers need to provide sufficient operational resource
+                                            information to help clients manipulate related resources.</p>
+                                        <h3>Example API conversations</h3>
+                                        <p>These examples enable developers to quickly understand the use of the API.</p>
+                                    </section><br>
+                                    <h2 id="serviceTotal" class="text-info"></h2>
+                                </article>
+                            </div>
+                            <div id="serviceLevelLoadingId" class="col text-center" style="display:none">
+                                <i class="fa fa-cog fa-spin fa-5x fa-fw margin-bottom"></i>
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <div id="serviceDiv" class="col">
+                                <canvas id="serviceLevel"></canvas>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div id="EndpointLevel" class="tab-pane fade">
+                        <div class="row">
+                            <div class="col">
+                                <article>
+                                    <section>
+                                        <h3>REST-style URIs</h3>
+                                        <p>Resource-based operations on resources through URIs include obtaining,
+                                            creating, modifying, and deleting resources.</p>
+                                        <h3>HTTP status code use</h3>
+                                        <p>If the task succeeds in error or completion, the service will return the
+                                            status code.</p>
+                                        <h3>Input format JSON、Output format JSON</h3>
+                                        <p>Based on the provision of uniform data input and output formats.</p>
+                                        <h3>Explain Error messages</h3>
+                                        <p>Describe the possible error message generated by using the API, and explain
+                                            the error message in the corresponding HTTP status code.</p>
+                                    </section><br>
+                                    <h2 id="endpointTotal" class="text-info"></h2>
+                                </article>
+                            </div>
+                            <div id="endpointLevelLoadingId" class="col text-center" style="display:none">
+                                <i class="fa fa-cog fa-spin fa-5x fa-fw margin-bottom"></i>
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <div id="endpointDiv" class="col">
+                                <canvas id="endpointLevel"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        var serviceLevel = document.getElementById("serviceLevel");
+        var endpointLevel = document.getElementById("endpointLevel");
+        var x = document.getElementById("serviceDiv").offsetWidth;
+        // var w = window.innerWidth / 2.4;
+        serviceLevel.setAttribute("width", x);
+        endpointLevel.setAttribute("width", x);
+        serviceLevel.setAttribute("height", 450);
+        endpointLevel.setAttribute("height", 450);
+    </script>
+
+    <section class="py-5 px-5">
+        <div id="popular_standard_row" class="row">
+            <div id="popular_standard_LoadingId" class="col text-center" style="display:none">
+                <i class="fa fa-cog fa-spin fa-5x fa-fw margin-bottom"></i>
+                <span class="sr-only">Loading...</span>
+            </div>
+            <!-- <div class="col align-self-center">
+                <table class="table table-striped custab">
+                    <thead>
+                        <tr>
+                            <th>Popular Endpoint</th>
+                            <th>Title</th>
+                            <th>Parent ID</th>
+                        </tr>
+                    </thead>
+                    <tr>
+                        <td>1</td>
+                        <td>News</td>
+                        <td>News Cate</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Products</td>
+                        <td>Main Products</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Blogs</td>
+                        <td>Parent Blogs</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col align-self-center">
+                <table class="table table-striped custab">
+                    <thead>
+                        <tr>
+                            <th>Standard OAS</th>
+                            <th>Title</th>
+                            <th>Parent ID</th>
+                        </tr>
+                    </thead>
+                    <tr>
+                        <td>1</td>
+                        <td>News</td>
+                        <td>News Cate</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Products</td>
+                        <td>Main Products</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Blogs</td>
+                        <td>Parent Blogs</td>
+                    </tr>
+                </table>
+            </div> -->
+        </div>
+
+    </section>
+
+    <!-- 暫存 Service Level 和 Endpoint Level 資料，並且每三分鐘更新一次 -->
+    <script src="js/ServiceChartBar.js"></script>
+    <script src="js/EndpointChartBar.js"></script>
+    <script>
+        // store.set("service", {"totalService":1253,"serviceLevel":[{"quantity":1195,"feature":"HTTPS support"},{"quantity":1007,"feature":"User authentication"},{"quantity":913,"feature":"At most 20 operations"},{"quantity":180,"feature":"Example API conversations"}]});
+        // store.set("endpoint", {"endpointLevel":[{"quantity":17067,"feature":"REST-style URls"},{"quantity":27391,"feature":"HTTP status code use"},{"quantity":16134,"feature":"Explain Error messages"},{"quantity":14612,"feature":"Input format JSON"},{"quantity":19626,"feature":"Output format JSON"}],"totalOperation":27391});
+        updateData();
+        setInterval(updateData, 1000*60*3);
+        // setTimeout(drawServiceGraph, 1000*3, store.get("service"));
+        // setTimeout(drawEndpointGraph, 1000*3, store.get("endpoint"));
+        // console.log(store.getAll());
+    </script>
+</body>
+
+</html>
