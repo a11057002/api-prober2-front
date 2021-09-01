@@ -456,6 +456,17 @@ $.ajax({
     }
 });
 
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
 function bookmarkOAS(){
 	
 	//改存id 和 name
@@ -1823,12 +1834,15 @@ function parseOASBasicData(data) {
 		//pathCardBody.appendChild(testEndpointButton);
 		
                 pathCard.appendChild(pathCardBody);
-                if(!document.cookie) {
+                if(!readCookie("username")) {
                     //saveSchemeButton.disabled = true;
                     //SaveTestCaseBtn.disabled = true;
                 }
                 else{
-                    document.getElementById("logInbtn").innerText = document.cookie.split(";")[0].split("=")[1];
+                    // document.getElementById("logInbtn").innerText = document.cookie.split(";")[0].split("=")[1];
+                    let logInbtn = document.getElementById("logInbtn")
+                    logInbtn.innerText = readCookie("username");
+                    logInbtn.setAttribute("data-target","");
                     document.getElementById("signUpbtn").innerText = "";
 
                     //saveSchemeButton.disabled = false;
@@ -2189,8 +2203,8 @@ function saveTestCase(operationId, parameterIn){
     let user = "";
     let token = "";
     if(document.cookie !=  ""){
-        user = document.cookie.split(";")[0].split("=")[1];
-        token= document.cookie.split(";")[1].split("=")[1];
+        user = readCookie("username")
+        token= readCookie("token")
     }
     for(var i = 0; i < form.length; i++)
     {
@@ -2252,8 +2266,8 @@ function importTestCase(operationId, testCaseAt){
     let user = "";
     let token = "";
     if(document.cookie !=  ""){
-        user = document.cookie.split(";")[0].split("=")[1];
-        token= document.cookie.split(";")[1].split("=")[1];
+        user = readCookie("username")
+        token= readCookie("token")
     }
     $.ajax({
 
@@ -2480,8 +2494,8 @@ function saveScheme(operationId){
     let user = "";
     let token = "";
     if(document.cookie !=  ""){
-        user = document.cookie.split(";")[0].split("=")[1];
-        token= document.cookie.split(";")[1].split("=")[1];
+        user = readCookie("username")
+        token= readCookie("token")
     }
     
     var paramIn = document.getElementById("paramIn"+operationId).value;
