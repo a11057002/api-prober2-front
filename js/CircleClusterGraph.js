@@ -257,7 +257,7 @@ function requestClusterData(threshold) {
 var ipUrl = "http://140.121.197.131:8080";
     let clusterGraphLoadingIcon = document.getElementById("ClusterGraphLoading");
     let clusterGraphBlock = document.getElementById("ClusterGraphBlock");
-    var resourceId = document.getElementById("OASId").textContent;
+    var resourceId = document.getElementById("OASId").textContent.trim();
     $.ajax({
         url: ipUrl+"/getOASClusterInformation/" + resourceId+"?threshold="+threshold,
         type: "GET",
