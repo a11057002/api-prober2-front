@@ -2270,7 +2270,6 @@ function importTestCase(operationId, testCaseAt){
         token= readCookie("token")
     }
     $.ajax({
-
         url: ipUrl+"/testCaseList/"+operationId,
         type: "GET",
         headers: {
@@ -2281,7 +2280,18 @@ function importTestCase(operationId, testCaseAt){
         success: function(responseData){
            
             var modalfluid = document.getElementById("modalfluid"+"-"+testCaseAt);
-            
+            exportTestCase = (num) => {
+                var a = document.createElement("a");
+                // blob = new Blob([JSON.stringify(responseJson[num])], { type: "json/application" })
+                exportData = responseJson[num]
+                // exportData["urlPath"] = 123
+                blob = new Blob([json2yaml(JSON.stringify(exportData))])
+                url = window.URL.createObjectURL(blob);
+                a.href = url;
+                a.download = new Date().toJSON().slice(0, 10) + "TestCase.yml";
+                a.click();
+                window.URL.revokeObjectURL(url);
+            }
             var responseJson = JSON.parse(responseData);
             console.log(responseJson);
             if(!responseJson.length){
@@ -2300,13 +2310,13 @@ function importTestCase(operationId, testCaseAt){
                     }
                     parameterTable += '</tbody></table>';
 
-                    modalfluid.innerHTML += '<div class="row" data-dismiss="modal" style=" margin: 10px; border-bottom: 3px solid 	#CECEFF; border-left: 3px solid 	#CECEFF;border-radius: 5px;background-color: #f1f1ff;  height: auto; text-align: center; "><div class="col-md-12 ml-auto" style=" margin: auto;  width: 100%;" onclick=\'fillInTestCase('+ JSON.stringify(responseJson[i]) +","+operationId +",\""+testCaseAt+"\","+parseInt(responseJson[i].nodeId)+')\'    >'
+                    modalfluid.innerHTML += '<div class="row pb-3" data-dismiss="modal" style=" margin: 10px; border-bottom: 3px solid 	#CECEFF; border-left: 3px solid 	#CECEFF;border-radius: 5px;background-color: #f1f1ff;  height: auto; text-align: center; "><div class="col-md-12 ml-auto" style=" margin: auto;  width: 100%;" onclick=\'fillInTestCase('+ JSON.stringify(responseJson[i]) +","+operationId +",\""+testCaseAt+"\","+parseInt(responseJson[i].nodeId)+')\'    >'
                     +'Test Case ' + (i+1) +'<div class="table-responsive-sm"><table class="table"><tbody><tr> <th scope="row">Expected partial results</th><td>'
                     + responseJson[i].expectedPartialResult+'</td></tr> <tr><th scope="row">Json path</th><td>'
-                    + responseJson[i].jsonPath+'</td></tr> <tr><th scope="row">Parameters</th><td>'
-
+                    + responseJson[i].jsonPath+'</td></tr> <tr><th scope="row">Parameters</th><td>'                    
                     + parameterTable+'</td></tr> <tr><th scope="row">Provider</th><td>'
                     + responseJson[i].provider+'</td></tr></tbody></table>'
+                    +'<button class="btn btn-primary float-right" onclick="event.stopPropagation();exportTestCase(' + i + ')">Download</button>';
                     +'</div></div></div>'
                 }
              }
