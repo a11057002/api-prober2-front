@@ -242,7 +242,7 @@ let mashupBody = document.getElementById("MashupBody");
 var resourceId = document.getElementById("OASId").textContent;
 
 $.ajax({
-    url: "http://140.121.197.130:55212/getOASRecommendation/" + resourceId,
+    url: proberPath.proberBackEndPath + "/getOASRecommendation/" + resourceId,
     type: "GET",
     crossDomain: true,
     async: true,

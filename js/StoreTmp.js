@@ -4,10 +4,11 @@ async function updateData() {
     drawServiceGraph(store.get("service"))
     drawEndpointGraph(store.get("endpoint"))
 }
-var ipUrl = "http://140.121.197.130:55213";
+// var ipUrl = "http://140.121.197.130:55213";
+var ipUrl = proberPath.proberBackEndPath;
 function updateServiceCount() {
     $.ajax({
-        url: ipUrl+"/getServiceLevel",
+        url: ipUrl + "/getServiceLevel",
         type: "GET",
         crossDomain: true,
         async: true,
@@ -28,7 +29,7 @@ function updateServiceCount() {
 
 function updateEndpointCount() {
     $.ajax({
-        url: ipUrl+"/getEndpointLevel",
+        url: ipUrl + "/getEndpointLevel",
         type: "GET",
         crossDomain: true,
         async: true,
@@ -44,4 +45,9 @@ function updateEndpointCount() {
             console.log(e);
         }
     });
+}
+
+const StoreTmp = {
+    updateData,
+    a:123
 }

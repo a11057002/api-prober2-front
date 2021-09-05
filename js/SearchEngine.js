@@ -38,7 +38,8 @@
 //         }
 //     ]
 // };
-var ipUrl = "http://140.121.197.130:55213";
+// var ipUrl = "http://140.121.197.130:55213";
+var ipUrl = proberPath.proberBackEndPath;
 function postUserQuery() {
     let loadingIcon = document.getElementById("searchBoxLoadingId");
     let searchBox = document.getElementById("searchBoxId");

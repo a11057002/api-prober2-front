@@ -12,6 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <!-- <script defer src="js/HomePage.js"></script> -->
+    <script src="js/proberPath.js"></script>
     <script defer src="js/SearchEngine.js"></script>
     <script src="js/StoreTmp.js"></script>
     <script defer src="js/PopularAndStandardRecomment.js"></script>
@@ -332,19 +333,10 @@
         </div>
 
     </section>
-
-    <!-- 暫存 Service Level 和 Endpoint Level 資料，並且每三分鐘更新一次 -->
     <script src="js/ServiceChartBar.js"></script>
     <script src="js/EndpointChartBar.js"></script>
-    <script>
-        // store.set("service", {"totalService":1253,"serviceLevel":[{"quantity":1195,"feature":"HTTPS support"},{"quantity":1007,"feature":"User authentication"},{"quantity":913,"feature":"At most 20 operations"},{"quantity":180,"feature":"Example API conversations"}]});
-        // store.set("endpoint", {"endpointLevel":[{"quantity":17067,"feature":"REST-style URls"},{"quantity":27391,"feature":"HTTP status code use"},{"quantity":16134,"feature":"Explain Error messages"},{"quantity":14612,"feature":"Input format JSON"},{"quantity":19626,"feature":"Output format JSON"}],"totalOperation":27391});
-        updateData();
-        setInterval(updateData, 1000*60*3);
-        // setTimeout(drawServiceGraph, 1000*3, store.get("service"));
-        // setTimeout(drawEndpointGraph, 1000*3, store.get("endpoint"));
-        // console.log(store.getAll());
-    </script>
+    <!-- 暫存 Service Level 和 Endpoint Level 資料，並且每三分鐘更新一次 -->
+    <script src="js/SetIntervalToDrawGraph.js"></script>
 </body>
 
 </html>

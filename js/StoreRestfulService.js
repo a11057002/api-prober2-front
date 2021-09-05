@@ -2,7 +2,8 @@ function updateData() {
     updateServiceCount();
     updateEndpointCount();
 }
-var ipUrl = "http://140.121.197.130:55213";
+// var ipUrl = "http://140.121.197.130:55213";
+var ipUrl = proberPath.proberBackEndPath;
 function updateServiceCount() {
     $.ajax({
         url: ipUrl+"/getServiceLevel",
