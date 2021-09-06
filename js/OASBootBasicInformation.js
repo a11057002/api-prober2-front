@@ -2292,6 +2292,16 @@ function importTestCase(operationId, testCaseAt){
                 a.click();
                 window.URL.revokeObjectURL(url);
             }
+            exportAllTestCase = () => {
+                var a = document.createElement("a");
+                exportData = responseJson
+                blob = new Blob([json2yaml(JSON.stringify(exportData))])
+                url = window.URL.createObjectURL(blob);
+                a.href = url;
+                a.download = new Date().toJSON().slice(0, 10) + "AllTestCase.yml";
+                a.click();
+                window.URL.revokeObjectURL(url);
+            }
             var responseJson = JSON.parse(responseData);
             console.log(responseJson);
             if(!responseJson.length){
@@ -2316,9 +2326,10 @@ function importTestCase(operationId, testCaseAt){
                     + responseJson[i].jsonPath+'</td></tr> <tr><th scope="row">Parameters</th><td>'                    
                     + parameterTable+'</td></tr> <tr><th scope="row">Provider</th><td>'
                     + responseJson[i].provider+'</td></tr></tbody></table>'
-                    +'<button class="btn btn-primary float-right" onclick="event.stopPropagation();exportTestCase(' + i + ')">Download</button>';
-                    +'</div></div></div>'
+                    +'<button class="btn btn-primary float-right" onclick="event.stopPropagation();exportTestCase(' + i + ')">Download</button>'
+                    +'</div></div></div>'                    
                 }
+                modalfluid.innerHTML += '<button class="btn btn-primary float-right" onclick="event.stopPropagation();exportAllTestCase()">DownloadAll</button>'
              }
         },
         fail:function(responseData){
