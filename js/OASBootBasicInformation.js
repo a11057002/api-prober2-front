@@ -503,7 +503,8 @@ function refreshOASBasicDataWithUserFilter() {
 
 
 function parseOASBasicData(data) {
-    console.log("------ALL DATA-----"+ data);
+    console.log("------ALL DATA-----");
+    console.table(data);
     // 獲取使用者所選之標籤
     let userFilter = getEndpointLevelFilter();
 
@@ -2280,22 +2281,35 @@ function importTestCase(operationId, testCaseAt){
         success: function(responseData){
            
             var modalfluid = document.getElementById("modalfluid"+"-"+testCaseAt);
-            exportTestCase = (num) => {
+            exportTestCase = async (num,testCaseId) => {             
+                const testCaseResult = await getImportTestCaseResult(testCaseId);
                 var a = document.createElement("a");
                 // blob = new Blob([JSON.stringify(responseJson[num])], { type: "json/application" })
+                // transform to yaml and combine testResult 
                 exportData = responseJson[num]
-                // exportData["urlPath"] = 123
-                blob = new Blob([json2yaml(JSON.stringify(exportData))])
+                exportData["result"] = testCaseResult
+
+                blob = new Blob([json2yaml(exportData)])
                 url = window.URL.createObjectURL(blob);
                 a.href = url;
                 a.download = new Date().toJSON().slice(0, 10) + "TestCase.yml";
                 a.click();
                 window.URL.revokeObjectURL(url);
             }
-            exportAllTestCase = () => {
+            sleep = (ms) => {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+            exportAllTestCase = async () => {
                 var a = document.createElement("a");
                 exportData = responseJson
-                blob = new Blob([json2yaml(JSON.stringify(exportData))])
+                for(let i=0;i<exportData.length;i++){
+                    // will cause too many requests
+                    testCaseResult = await getImportTestCaseResult(parseInt(exportData[i].nodeId));
+                    exportData[i]["result"] = testCaseResult
+                    await sleep(1000);
+                }
+
+                blob = new Blob([json2yaml(exportData)])
                 url = window.URL.createObjectURL(blob);
                 a.href = url;
                 a.download = new Date().toJSON().slice(0, 10) + "AllTestCase.yml";
@@ -2303,7 +2317,6 @@ function importTestCase(operationId, testCaseAt){
                 window.URL.revokeObjectURL(url);
             }
             var responseJson = JSON.parse(responseData);
-            console.log(responseJson);
             if(!responseJson.length){
                 modalfluid.innerHTML = "There is no test case.";
             }else{
@@ -2319,14 +2332,14 @@ function importTestCase(operationId, testCaseAt){
                                         + responseJson[i].parameters[j].value + '</td></tr>'
                     }
                     parameterTable += '</tbody></table>';
-
+                    // Generate test Case List
                     modalfluid.innerHTML += '<div class="row pb-3" data-dismiss="modal" style=" margin: 10px; border-bottom: 3px solid 	#CECEFF; border-left: 3px solid 	#CECEFF;border-radius: 5px;background-color: #f1f1ff;  height: auto; text-align: center; "><div class="col-md-12 ml-auto" style=" margin: auto;  width: 100%;" onclick=\'fillInTestCase('+ JSON.stringify(responseJson[i]) +","+operationId +",\""+testCaseAt+"\","+parseInt(responseJson[i].nodeId)+')\'    >'
                     +'Test Case ' + (i+1) +'<div class="table-responsive-sm"><table class="table"><tbody><tr> <th scope="row">Expected partial results</th><td>'
                     + responseJson[i].expectedPartialResult+'</td></tr> <tr><th scope="row">Json path</th><td>'
                     + responseJson[i].jsonPath+'</td></tr> <tr><th scope="row">Parameters</th><td>'                    
                     + parameterTable+'</td></tr> <tr><th scope="row">Provider</th><td>'
                     + responseJson[i].provider+'</td></tr></tbody></table>'
-                    +'<button class="btn btn-primary float-right" onclick="event.stopPropagation();exportTestCase(' + i + ')">Download</button>'
+                    +'<button class="btn btn-primary float-right" onclick="event.stopPropagation();exportTestCase(' + i + ','+ parseInt(responseJson[i].nodeId)+');">Download</button>'
                     +'</div></div></div>'                    
                 }
                 modalfluid.innerHTML += '<button class="btn btn-primary float-right" onclick="event.stopPropagation();exportAllTestCase()">DownloadAll</button>'
@@ -2377,11 +2390,31 @@ function fillInTestCase(data,operationId,testCaseAt,testCaseId){
     runTestCaseByProvider(operationId, testCaseAt, testCaseId);
 
 }
-function runTestCaseByProvider(operationId, testCaseAt, testCaseId){
-console.log(testCaseAt)
-    
-    $.ajax({
 
+async function getImportTestCaseResult(testCaseId){
+    return new Promise((res,rej)=>{
+        $.ajax({
+            url: ipUrl+"/runTestCase/",
+            type: "POST",   
+            data: '{"nodeId":"'+testCaseId+'"}',
+            contentType: "application/json",                 
+            dataType: "text",
+            
+            success: function(responseData){
+                console.log(responseData)
+                res(JSON.parse(responseData))
+            },
+            fail: function(err){
+                rej(err)
+            }
+        });
+    })
+}
+
+
+function runTestCaseByProvider(operationId, testCaseAt, testCaseId){
+console.log(testCaseAt)    
+    $.ajax({
         url: ipUrl+"/runTestCase/",
         type: "POST",   
         data: '{"nodeId":"'+testCaseId+'"}',
@@ -2389,7 +2422,6 @@ console.log(testCaseAt)
         dataType: "text",
         
         success: function(responseData){
-            
            if(testCaseAt == "test"){
             if(responseData.includes("Error:")){
                 testCaseStatus = 0;
@@ -2631,11 +2663,9 @@ function signup(){
             
             success: function(responseData){
                 $("#modalRegisterForm").modal("hide");
-               document.getElementById("logInbtn").click();
-               
-                
+               document.getElementById("logInbtn").click();                            
             },
-            fail:function(responseData){
+            error:function(responseData){
                 
             }
     });
@@ -2643,7 +2673,7 @@ function signup(){
 function login(){
     let password = document.getElementById("defaultForm-pass").value;    
     let username = document.getElementById("defaultForm-name").value;
-   
+    $("#modalLoginForm .error").html("")
     data = {
         "username":username,
         "password":password
@@ -2664,10 +2694,11 @@ function login(){
               document.cookie="username="+responseData.username+";expires="+expires;
               document.cookie="token="+responseData.accessToken+";expires="+expires;
                           
+              alert("登入成功!");
             
             },
-            fail:function(responseData){
-                
+            error:function(responseData){    
+                $("#modalLoginForm .error").html("Please check your Username and Password.")
             }
     });
 }
